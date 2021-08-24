@@ -1,6 +1,9 @@
 # hr-tg-bot
 For Alfa with love
 
+Перед запуском проекта нудно запустить `MongoDB`
+Команда для старта контейнера `docker run -p 27017:27017 --name database -d mongo`
+
 Для запуска бота нужно выполнить следующие команды `yarn build && TOKEN={логично токен от нашего бота} yarn start`
  
 Токен можно узнать у @igoralfalab

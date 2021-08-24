@@ -88,58 +88,6 @@ const MOCK_QUESTIONS: Question[] = [
                 isRight: false,
             }
         ],
-    },
-    {
-        id: '4',
-        text: 'Что выведет в консоль если бы мы запустили это в браузере?\n\n' + 'function foo() {\n    console.log(this);\n}\n\nfoo();',
-        buttons: [
-            {
-                text: 'Window',
-                id: '1_1',
-                isRight: true,
-            },
-            {
-                text: 'undefined',
-                id: '1_1',
-                isRight: false,
-            },
-            {
-                text: 'null',
-                id: '1_1',
-                isRight: false,
-            },
-            {
-                text: 'foo',
-                id: '1_1',
-                isRight: false,
-            }
-        ],
-    },
-    {
-        id: '5',
-        text: 'А в таком случае?\n\n' + 'const a = {};\nfunction foo() {\n    console.log(this);\n}\n\nfoo.call(a);',
-        buttons: [
-            {
-                text: '{}',
-                id: '1_1',
-                isRight: true,
-            },
-            {
-                text: 'Window',
-                id: '1_1',
-                isRight: false,
-            },
-            {
-                text: 'вызов foo не произойдет',
-                id: '1_1',
-                isRight: false,
-            },
-            {
-                text: 'foo',
-                id: '1_1',
-                isRight: false,
-            }
-        ],
     }
 ];
 
