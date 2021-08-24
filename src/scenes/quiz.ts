@@ -4,6 +4,7 @@ import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 
 import { AllContext, QuizSessionData } from '../types';
 import MOCK_QUESTIONS from './data';
+import { SceneNames } from './types';
 
 type QuestionArgs = {
     text: string;
@@ -12,7 +13,7 @@ type QuestionArgs = {
 
 const { button: { callback: callbackButton }, inlineKeyboard } = Markup;
 const { BaseScene } = Scenes;
-const quiz = new BaseScene<AllContext>('quiz');
+const quiz = new BaseScene<AllContext>(SceneNames.quiz);
 
 let QUESTION_TIMEOUT: NodeJS.Timeout = null;
 let SECONDS_INTERVAL: NodeJS.Timeout = null;

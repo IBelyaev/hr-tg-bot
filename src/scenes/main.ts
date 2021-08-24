@@ -2,6 +2,7 @@ import { Scenes, Markup } from 'telegraf';
 
 import { AllContext } from '../types';
 import { UserDocument } from '#/models';
+import { SceneNames } from './types';
 
 type MainState = {
     user: UserDocument;
@@ -9,7 +10,7 @@ type MainState = {
 
 const { BaseScene } = Scenes;
 const { button, inlineKeyboard } = Markup;
-const main = new BaseScene<AllContext>('main');
+const main = new BaseScene<AllContext>(SceneNames.main);
 
 main.enter((ctx) => {
     if (isMainSate(ctx.session.__scenes.state)) {
@@ -38,7 +39,7 @@ main.action('go_to_quiz', async (ctx) => {
         } = ctx.session.__scenes.state.user;
         const initialState = {currentQuestion, userGoals};
 
-        ctx.scene.enter('quiz', initialState);
+        ctx.scene.enter(SceneNames.quiz, initialState);
     }
 });
 

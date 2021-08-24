@@ -5,6 +5,7 @@ import { AllContext, StartPayload } from './types';
 import main from './scenes/main';
 import authError from './scenes/auth-error';
 import quiz from './scenes/quiz';
+import { SceneNames } from './scenes/types';
 import User from './models';
 
 const { Stage } = Scenes;
@@ -30,7 +31,7 @@ db.once('open', function() {
   bot.start( async (ctx: AllContext & StartPayload) => {
     const [user] = await User.find({id: ctx.startPayload});
     // TODO: вынести все названия сцен в enum
-    const sceneName = user ? 'main' : 'auth-error';
+    const sceneName = user ? SceneNames.main : SceneNames.authError;
 
     console.log(`User token is ${ctx.startPayload}`);
     ctx.scene.enter(sceneName, {user});

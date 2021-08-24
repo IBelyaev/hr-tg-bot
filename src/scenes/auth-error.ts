@@ -1,9 +1,10 @@
 import { Scenes } from 'telegraf';
 
 import { AllContext } from '../types';
+import { SceneNames } from './types';
 
 const { BaseScene } = Scenes;
-const authError = new BaseScene<AllContext>('auth-error');
+const authError = new BaseScene<AllContext>(SceneNames.authError);
 
 authError.enter((ctx) => {
     ctx.reply(
