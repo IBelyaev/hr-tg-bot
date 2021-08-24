@@ -1,6 +1,6 @@
 import { Telegraf, session, Scenes } from 'telegraf';
 
-import { AllContext } from './types';
+import { AllContext, StartPayload } from './types';
 import main from './scenes/main';
 import quiz from './scenes/quiz';
 
@@ -12,7 +12,9 @@ const bot = new Telegraf<AllContext>(TOKEN);
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.start((ctx: AllContext) => {
+bot.start((ctx: AllContext & StartPayload) => {
+  console.log(`User token is ${ctx.startPayload}`);
+
   ctx.scene.enter('main');
 })
 

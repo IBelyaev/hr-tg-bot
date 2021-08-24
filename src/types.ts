@@ -6,4 +6,8 @@ export type QuizSessionData = {
     userGoals: number;
 };
 
+export type StartPayload = {
+    startPayload: string;
+};
+
 export type AllContext = Context & SceneContext;
