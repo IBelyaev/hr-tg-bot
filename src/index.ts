@@ -13,6 +13,7 @@ const { TOKEN } = process.env;
 const stage = new Stage([main, quiz, authError]);
 const bot = new Telegraf<AllContext>(TOKEN);
 
+// TODO: сделать retry для connect
 mongoose.connect('mongodb://localhost/database', {
   useNewUrlParser: true,
   useFindAndModify: false,

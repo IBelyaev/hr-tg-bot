@@ -44,9 +44,15 @@ main.action('go_to_quiz', async (ctx) => {
 });
 
 main.action('schedule_quiz', async (ctx) => {
-    await ctx.reply('Хорошо, не буду тебе мешать)');
+    if (isMainSate(ctx.session.__scenes.state)) {
+        const { id } = ctx.session.__scenes.state.user;
 
-    ctx.reply('Чтобы начать заново отправь плез /start )');
+        await ctx.reply('Хорошо, не буду тебе мешать)');
+        ctx.reply(
+            'Чтобы начать заново, нужно нажать на ссылку) ' +
+            `https://t.me/HRAlfaBot?start=${id}`
+        );
+    }
 });
 
 export default main;
