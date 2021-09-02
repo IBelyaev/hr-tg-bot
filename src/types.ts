@@ -3,7 +3,7 @@ import { Context } from 'telegraf';
 
 export type QuizSessionData = {
     currentQuestion: number;
-    userGoals: number;
+    goals: number;
 };
 
 export type StartPayload = {

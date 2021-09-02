@@ -29,8 +29,8 @@ db.once('open', function() {
 
   bot.use(stage.middleware());
 
-  bot.start( async (ctx: AllContext & StartPayload) => {
-    const [user] = await User.find({id: ctx.startPayload});
+  bot.start(async (ctx: AllContext & StartPayload) => {
+    const [user] = await User.find({_id: ctx.startPayload});
     // TODO: вынести все названия сцен в enum
     const sceneName = user ? SceneNames.main : SceneNames.authError;
 

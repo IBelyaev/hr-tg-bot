@@ -35,9 +35,9 @@ main.action('go_to_quiz', async (ctx) => {
     if (isMainSate(ctx.session.__scenes.state)) {
         const {
             currentQuestion = 0,
-            userGoals = 0
+            goals = 0
         } = ctx.session.__scenes.state.user;
-        const initialState = {currentQuestion, userGoals};
+        const initialState = {currentQuestion, goals};
 
         ctx.scene.enter(SceneNames.quiz, initialState);
     }

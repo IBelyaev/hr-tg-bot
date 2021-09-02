@@ -33,7 +33,7 @@ quiz.on('callback_query', async (ctx) => {
         setNextQuestion(ctx);
 
         if (isCallbackHasData(callback_query) && isQuizSate(ctx.session.__scenes.state) && callback_query.data === 'sended_right_answer') {
-            ctx.session.__scenes.state.userGoals = ctx.session.__scenes.state.userGoals + 1;
+            ctx.session.__scenes.state.goals = ctx.session.__scenes.state.goals + 1;
         }
     
         sendQuizAnswer(ctx);
@@ -48,7 +48,7 @@ async function sendQuizAnswer(ctx: AllContext): Promise<void> {
     if (isQuizSate(ctx.session.__scenes.state)) {
         if (ctx.session.__scenes.state.currentQuestion >= MOCK_QUESTIONS.length) {
             ctx.reply(
-                'Вы ответили верно на ' + ctx.session.__scenes.state.userGoals
+                'Вы ответили верно на ' + ctx.session.__scenes.state.goals
             );
         } else {
             const { text, answerButtons } = getQuestionArgs(ctx.session.__scenes.state.currentQuestion, ctx);
@@ -139,7 +139,7 @@ function isCallbackHasData(callbackQuery: CallbackQuery): callbackQuery is Callb
 }
 
 function isQuizSate(state: object): state is QuizSessionData {
-    if (state.hasOwnProperty('currentQuestion') && state.hasOwnProperty('userGoals'))  {
+    if (state.hasOwnProperty('currentQuestion') && state.hasOwnProperty('goals'))  {
         return true;
     }
 
