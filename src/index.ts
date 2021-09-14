@@ -30,12 +30,15 @@ db.once('open', function() {
   bot.use(stage.middleware());
 
   bot.start(async (ctx: AllContext & StartPayload) => {
-    const [user] = await User.find({_id: ctx.startPayload});
-    // TODO: вынести все названия сцен в enum
-    const sceneName = user ? SceneNames.main : SceneNames.authError;
-
-    console.log(`User token is ${ctx.startPayload}`);
-    ctx.scene.enter(sceneName, {user});
+    try {
+      const [user] = await User.find({_id: ctx.startPayload});
+      const sceneName = user ? SceneNames.main : SceneNames.authError;
+  
+      console.log(`User token is ${ctx.startPayload}`);
+      ctx.scene.enter(sceneName, {user});
+    } catch(_e) {
+      ctx.scene.enter(SceneNames.authError);
+    }
   });
 
   bot.launch();
