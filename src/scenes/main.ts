@@ -33,11 +33,25 @@ main.action('go_to_quiz', async (ctx) => {
     await ctx.reply('Супер! Тогда приступим!');
 
     if (isMainSate(ctx.session.__scenes.state)) {
+        // из-за очень странного поведения telegraf все так глупо, так как просто передать в 
+        // enter ctx.session.__scenes.state.user не получится, в этом случае в state quiz мы получим 
+        // очень странный объект с вложенной структурой
+
+        // TODO: скорее всего весь юзер нам не понадобиться в state, а всего лишь _id
+        // не самое оптимальное решение, конечно, но пока я сразу мутирую модель и сохраняю ее.
+        // по этому скорее всего в след коммите надо все удалить в initialState кроме _id
+
         const {
             currentQuestion = 0,
-            goals = 0
+            goals = 0,
+            _id,
+            name,
+            surname,
+            phoneNumber,
+            isPassedScreening = false
         } = ctx.session.__scenes.state.user;
-        const initialState = {currentQuestion, goals};
+
+        const initialState = {currentQuestion, goals, _id, name, surname, phoneNumber, isPassedScreening};
 
         ctx.scene.enter(SceneNames.quiz, initialState);
     }

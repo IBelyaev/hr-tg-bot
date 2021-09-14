@@ -73,6 +73,48 @@ const MOCK_QUESTIONS: Question[] = [
                 isRight: false,
             }
         ],
+    },
+    {
+        id: '4',
+        text: ' лол кек - это',
+        buttons: [
+            {
+                text: 'чебурек',
+                id: '1_1',
+                isRight: true,
+            },
+            {
+                text: 'человек',
+                id: '1_1',
+                isRight: false,
+            },
+            {
+                text: 'полковник на белом коне',
+                id: '1_1',
+                isRight: false,
+            }
+        ],
+    },
+    {
+        id: '5',
+        text: 'Что такое мемная пака?',
+        buttons: [
+            {
+                text: 'Апчихба!',
+                id: '1_1',
+                isRight: true,
+            },
+            {
+                text: 'человек',
+                id: '1_1',
+                isRight: false,
+            },
+            {
+                text: 'полковник на белом коне',
+                id: '1_1',
+                isRight: false,
+            }
+        ],
     }
 ];
 

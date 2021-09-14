@@ -2,7 +2,8 @@ import { Scenes, Markup } from 'telegraf';
 import { CallbackQuery } from 'typegram/callback';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 
-import { AllContext, QuizSessionData } from '../types';
+import User, { UserDocument } from '../models';
+import { AllContext } from '../types';
 import MOCK_QUESTIONS from './data';
 import { SceneNames } from './types';
 
@@ -30,13 +31,18 @@ quiz.on('callback_query', async (ctx) => {
     const { callback_query } = ctx.update;
 
     if (isQuizSate(ctx.session.__scenes.state) && ctx.session.__scenes.state.currentQuestion < MOCK_QUESTIONS.length) {
-        setNextQuestion(ctx);
+        await setNextQuestion(ctx);
 
         if (isCallbackHasData(callback_query) && isQuizSate(ctx.session.__scenes.state) && callback_query.data === 'sended_right_answer') {
-            ctx.session.__scenes.state.goals = ctx.session.__scenes.state.goals + 1;
+            const { _id } = ctx.session.__scenes.state;
+            const CurrentUser = await User.findOne({ _id });
+
+            CurrentUser.goals = CurrentUser.goals + 1;
+    
+            await CurrentUser.save();
         }
     
-        sendQuizAnswer(ctx);
+        await sendQuizAnswer(ctx);
     }
 });
 
@@ -46,10 +52,16 @@ async function sendQuizAnswer(ctx: AllContext): Promise<void> {
     clearAllTimers();
 
     if (isQuizSate(ctx.session.__scenes.state)) {
+        const { _id } = ctx.session.__scenes.state;
+
         if (ctx.session.__scenes.state.currentQuestion >= MOCK_QUESTIONS.length) {
-            ctx.reply(
-                'Вы ответили верно на ' + ctx.session.__scenes.state.goals
-            );
+            const CurrentUser = await User.findOne({ _id });
+
+            CurrentUser.isPassedScreening = true;
+
+            await CurrentUser.save();
+
+            await ctx.scene.enter(SceneNames.finish);
         } else {
             const { text, answerButtons } = getQuestionArgs(ctx.session.__scenes.state.currentQuestion, ctx);
     
@@ -100,7 +112,7 @@ function getQuestionArgs(questionIndex: number, ctx: AllContext): QuestionArgs {
     }
 }
 
-function getQuestionsButton(questionIndex: number, ctx: AllContext): Markup.Markup<InlineKeyboardMarkup> {
+function getQuestionsButton(questionIndex: number, _ctx: AllContext): Markup.Markup<InlineKeyboardMarkup> {
     const buttons = MOCK_QUESTIONS[questionIndex].buttons.map(({text, isRight}) => (
         [callbackButton(text, isRight ? 'sended_right_answer' : 'sended_wrong_answer')]
     ));
@@ -108,10 +120,10 @@ function getQuestionsButton(questionIndex: number, ctx: AllContext): Markup.Mark
     return inlineKeyboard(buttons);
 }
 
-function sendTimeoutMessage(ctx: AllContext): void {
-    setNextQuestion(ctx);
+async function sendTimeoutMessage(ctx: AllContext): Promise<void> {
+    await setNextQuestion(ctx);
 
-    ctx.reply(
+    await ctx.reply(
         (
             'Прости но время вышло(((((((( ' +
             'Чтобы перейти к следующему вопросу нажми кнопку далее'
@@ -120,8 +132,14 @@ function sendTimeoutMessage(ctx: AllContext): void {
     )
 }
 
-function setNextQuestion(ctx: AllContext): void {
+async function setNextQuestion(ctx: AllContext): Promise<void> {
     if (isQuizSate(ctx.session.__scenes.state)) {
+        const { _id  } = ctx.session.__scenes.state;
+        const CurrentUser = await User.findOne({ _id });
+        CurrentUser.currentQuestion = CurrentUser.currentQuestion + 1;
+
+        await CurrentUser.save();
+
         ctx.session.__scenes.state.currentQuestion = ctx.session.__scenes.state.currentQuestion + 1;
     }
 }
@@ -138,8 +156,15 @@ function isCallbackHasData(callbackQuery: CallbackQuery): callbackQuery is Callb
     return false;
 }
 
-function isQuizSate(state: object): state is QuizSessionData {
-    if (state.hasOwnProperty('currentQuestion') && state.hasOwnProperty('goals'))  {
+function isQuizSate(state: object): state is UserDocument {
+    if (
+        state.hasOwnProperty('surname') &&
+        state.hasOwnProperty('name') &&
+        state.hasOwnProperty('phoneNumber') &&
+        state.hasOwnProperty('currentQuestion') &&
+        state.hasOwnProperty('isPassedScreening') &&
+        state.hasOwnProperty('goals')
+    ) {
         return true;
     }
 
