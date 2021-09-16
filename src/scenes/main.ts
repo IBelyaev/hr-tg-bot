@@ -47,11 +47,10 @@ main.action('go_to_quiz', async (ctx) => {
             _id,
             name,
             surname,
-            phoneNumber,
             isPassedScreening = false
         } = ctx.session.__scenes.state.user;
 
-        const initialState = {currentQuestion, goals, _id, name, surname, phoneNumber, isPassedScreening};
+        const initialState = {currentQuestion, goals, _id, name, surname, isPassedScreening};
 
         ctx.scene.enter(SceneNames.quiz, initialState);
     }

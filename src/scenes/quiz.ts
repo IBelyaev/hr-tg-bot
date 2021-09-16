@@ -160,7 +160,6 @@ function isQuizSate(state: object): state is UserDocument {
     if (
         state.hasOwnProperty('surname') &&
         state.hasOwnProperty('name') &&
-        state.hasOwnProperty('phoneNumber') &&
         state.hasOwnProperty('currentQuestion') &&
         state.hasOwnProperty('isPassedScreening') &&
         state.hasOwnProperty('goals')
