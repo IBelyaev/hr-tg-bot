@@ -52,14 +52,8 @@ async function sendQuizAnswer(ctx: AllContext): Promise<void> {
     clearAllTimers();
 
     if (isQuizSate(ctx.session.__scenes.state)) {
-        const { _id } = ctx.session.__scenes.state;
-
         if (ctx.session.__scenes.state.currentQuestion >= MOCK_QUESTIONS.length) {
-            const CurrentUser = await User.findOne({ _id });
-
-            CurrentUser.isPassedScreening = true;
-
-            await CurrentUser.save();
+            await changedUserBeforeFinis(ctx);
 
             await ctx.scene.enter(SceneNames.finish);
         } else {
@@ -168,4 +162,22 @@ function isQuizSate(state: object): state is UserDocument {
     }
 
     return false;
+}
+
+async function changedUserBeforeFinis(ctx: AllContext) {
+    if (isQuizSate(ctx.session.__scenes.state)) {
+        const LOCALE_DATA_OPTIONS = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'} as const;
+        const DATE_COUNTRY = 'ru-RU';
+
+        const { _id } = ctx.session.__scenes.state;
+        const CurrentUser = await User.findOne({ _id });
+
+        const date = new Date();
+        const finishDate = date.toLocaleDateString(DATE_COUNTRY, LOCALE_DATA_OPTIONS) + ' ' + date.toLocaleTimeString(DATE_COUNTRY);
+
+        CurrentUser.isPassedScreening = true;
+        CurrentUser.finishDate = finishDate;
+
+        await CurrentUser.save();
+    }
 }

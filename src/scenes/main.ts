@@ -1,7 +1,7 @@
 import { Scenes, Markup } from 'telegraf';
 
 import { AllContext } from '../types';
-import { UserDocument } from '#/models';
+import User, { UserDocument } from '../models';
 import { SceneNames } from './types';
 
 type MainState = {
@@ -31,6 +31,8 @@ main.enter((ctx) => {
 
 main.action('go_to_quiz', async (ctx) => {
     await ctx.reply('Супер! Тогда приступим!');
+
+    await setStartDateToBD(ctx);
 
     if (isMainSate(ctx.session.__scenes.state)) {
         // из-за очень странного поведения telegraf все так глупо, так как просто передать в 
@@ -78,4 +80,23 @@ function getCapitalizeName(name = ''): string {
     const [firstWord = '', ...rest] = name.toLocaleLowerCase().split('');
 
     return firstWord.toUpperCase() + rest.join('');
+}
+
+async function setStartDateToBD(ctx: AllContext): Promise<void> {
+    if (isMainSate(ctx.session.__scenes.state)) {
+        const LOCALE_DATA_OPTIONS = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'} as const;
+        const DATE_COUNTRY = 'ru-RU';
+
+        const { _id } = ctx.session.__scenes.state.user;
+        const CurrentUser = await User.findOne({ _id });
+
+        if (!CurrentUser.startDate) {
+            const date = new Date();
+            const startDate = date.toLocaleDateString(DATE_COUNTRY, LOCALE_DATA_OPTIONS) + ' ' + date.toLocaleTimeString(DATE_COUNTRY);
+
+            CurrentUser.startDate = startDate;
+            
+            await CurrentUser.save();
+        }
+    }
 }
