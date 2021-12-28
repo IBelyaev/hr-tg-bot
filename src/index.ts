@@ -15,7 +15,7 @@ const stage = new Stage([main, quiz, authError, finish]);
 const bot = new Telegraf<AllContext>(TOKEN);
 
 // TODO: сделать retry для connect
-mongoose.connect('mongodb://localhost/database', {
+mongoose.connect('mongodb://mongo:27017/database', {
   useNewUrlParser: true,
   useFindAndModify: false,
   useUnifiedTopology: true,

@@ -1,0 +1,32 @@
+# docker-compose.yml
+
+version: "3.7"
+services:
+    mongo:
+        image: mongo
+        # environment:
+        #     -
+        ports:
+          - '27017:27017'
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        volumes:
+            - ./db-data:/data/db
+
+    admin_server:
+        image: hr-tg-bot-server:2
+        # environment:
+            # -
+        depends_on:
+            - mongo
+        ports:
+            - '8000:8000'
+
+    tg_server:
+        build:
+            context: .
+        depends_on:
+            - mongo
+
+volumes:
+    db-data:
